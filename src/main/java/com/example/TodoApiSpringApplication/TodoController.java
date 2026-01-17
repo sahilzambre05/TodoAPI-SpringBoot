@@ -1,6 +1,7 @@
 package com.example.TodoApiSpringApplication;
 
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,17 @@ import java.util.Map;
 public class TodoController {
     private static List<Todo> todoList;
 
+    private TodoService todoService;
 
-    public TodoController(){
+    private TodoService todoService2;
+
+
+    public TodoController(
+            @Qualifier("anotherTodoService") TodoService todoService,
+            @Qualifier("fakeTodoService") TodoService todoService2){
         todoList = new ArrayList<>();
+        this.todoService = todoService;
+        this.todoService2=todoService2;
         todoList.add(new Todo(1, false, "Todo 1", 1));
         todoList.add(new Todo(2, true, "Todo 2", 2));
     }
