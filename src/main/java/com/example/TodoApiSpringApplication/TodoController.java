@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/todos")
@@ -22,7 +23,8 @@ public class TodoController {
 
 
     @GetMapping
-    public ResponseEntity<List<Todo>> getTodo(){
+    public ResponseEntity<List<Todo>> getTodos(@RequestParam(name = "isCompleted", required = false) Boolean isCompleted){
+        System.out.println("Incoming query Params :" + isCompleted);
         return ResponseEntity.ok(todoList);
     }
 
@@ -35,13 +37,17 @@ public class TodoController {
 
 
     @GetMapping("/{todoId}")
-    public ResponseEntity<Todo> getTodoById(@PathVariable("todoId") Long todoId) {
+    public ResponseEntity<?> getTodoById(@PathVariable Long todoId) {
         for (Todo todo : todoList) {
             if (todo.getId()==todoId) {
                 return ResponseEntity.ok(todo);
             }
         }
-        return ResponseEntity.notFound().build();
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", "Todo not found"));
     }
+
 
 }
