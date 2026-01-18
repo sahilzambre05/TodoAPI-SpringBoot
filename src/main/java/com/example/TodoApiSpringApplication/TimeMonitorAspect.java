@@ -11,8 +11,23 @@ public class TimeMonitorAspect {
 
     @Around("@annotation(com.example.TodoApiSpringApplication.TimeMonitor)")
     public Object logtime(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.out.println("Logging time");
 
-        return joinPoint.proceed(); // REQUIRED
+        long start = System.currentTimeMillis();
+
+        try {
+            // execute the join point
+            joinPoint.proceed();
+        }
+        catch (Throwable e) {
+            System.out.println("Something went wrong during the execution");
+        } finally {
+            long end = System.currentTimeMillis();
+
+            long totalExecutionTime = end - start;
+
+            System.out.println("Total time of execution of the method is: " + totalExecutionTime + " ms..");
+        }
+
+        return joinPoint.proceed();
     }
 }
